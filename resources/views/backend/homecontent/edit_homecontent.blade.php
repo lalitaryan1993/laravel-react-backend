@@ -1,0 +1,176 @@
+@extends('admin.admin_master')
+@section('admin')
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+
+    <div class="content-body" style="min-height: 788px;">
+        <div class="container-fluid">
+            <!-- Add Project -->
+            <div class="modal fade" id="addProjectSidebar">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+
+                        </div>
+                        <div class="modal-body">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="row page-titles mx-0">
+                <div class="col-sm-6 p-md-0">
+                    <div class="welcome-text">
+
+
+                    </div>
+                </div>
+                <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+
+                </div>
+            </div>
+
+
+
+            <!-- row -->
+            <div class="row">
+
+                <div class="col-xl-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Edit Home Content </h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="basic-form">
+
+                                <form method="post" action="{{ route('homeContent.update') }}">
+                                    @csrf
+
+                                    <input type="hidden" name="id" value="{{ $homeContent->id }}">
+
+                                    <div class="form-group">
+                                        <label class="info-title">Home Title </label>
+                                        <input type="text" name="home_title" class="form-control input-default "
+                                            value="{{ $homeContent->home_title }}">
+                                        @error('home_title')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label class="info-title">Home Sub Title </label>
+                                        <input type="text" name="home_subtitle" class="form-control input-default "
+                                            value="{{ $homeContent->home_subtitle }}">
+                                        @error('home_subtitle')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label class="info-title">Tech Description </label>
+                                        <textarea class="form-control" name="tech_description" id="summernote">
+                                {{ $homeContent->tech_description }}
+                            </textarea>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label class="info-title">Total Student </label>
+                                        <input type="text" name="total_student" class="form-control input-default "
+                                            value="{{ $homeContent->total_student }}">
+                                        @error('total_student')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="info-title">Total Course </label>
+                                        <input type="text" name="total_course" class="form-control input-default "
+                                            value="{{ $homeContent->total_course }}">
+                                        @error('total_course')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label class="info-title">Total Review </label>
+                                        <input type="text" name="total_review" class="form-control input-default "
+                                            value="{{ $homeContent->total_review }}">
+                                        @error('total_review')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="info-title">Video Description </label>
+                                        <textarea class="form-control" name="video_description" id="summernote2">
+                                {{ $homeContent->video_description }}
+                            </textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="info-title">Video URL </label>
+                                        <input type="text" name="video_url" class="form-control input-default "
+                                            value="{{ $homeContent->video_url }}">
+                                        @error('video_url')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+
+                                    </div>
+
+
+                                    <input type="submit" class="btn btn-success" value="Update Home Content">
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+
+
+    <!-- summernote css/js -->
+
+    <script type="text/javascript">
+        $('#summernote').summernote({
+            height: 200
+        });
+    </script>
+
+    <script type="text/javascript">
+        $('#summernote2').summernote({
+            height: 200
+        });
+    </script>
+
+@endsection

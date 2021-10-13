@@ -37,7 +37,7 @@ Route::get('/courseHome', [CoursesController::class, 'onSelectFour']);
 // Course All
 Route::get('/courseAll', [CoursesController::class, 'onSelectAll']);
 // Course Details
-Route::get('/courseDetails/{id}', [CoursesController::class, 'onSelectDetails']);
+Route::get('/courseDetails/{id}', [CoursesController::class, 'courseDetails']);
 //  Footer Details Route
 Route::get('/footerData', [FooterController::class, 'onSelectAll']);
 // Information Data

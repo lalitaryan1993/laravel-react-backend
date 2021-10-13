@@ -15,69 +15,80 @@ class ChartController extends Controller
         return $charts;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function AllChartContent()
     {
-        //
+        $chart = Chart::all();
+        return view('backend.chart.all_chart', compact('chart'));
+    } // end method
+
+    public function AddChartContent()
+    {
+        return view('backend.chart.add_chart');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function StoreChartContent(Request $request)
     {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+        $request->validate([
+            'Technology' => 'required',
+            'Projects' => 'required',
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+        Chart::insert([
+            'Technology' => $request->Technology,
+            'Projects' => $request->Projects,
+
+        ]);
+
+        $notification = array(
+            'message' => 'Chart Added Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('all.chart.content')->with($notification);
+    } // end method
+
+
+    public function EditChartContent($id)
     {
-        //
-    }
+        $chart = Chart::findOrFail($id);
+        return view('backend.chart.edit_chart', compact('chart'));
+    } // end method
+
+
+    public function UpdateChartContent(Request $request)
+    {
+
+        $chart_id = $request->id;
+
+        Chart::findOrFail($chart_id)->update([
+
+            'Technology' => $request->Technology,
+            'Projects' => $request->Projects,
+
+
+        ]);
+
+        $notification = array(
+            'message' => 'Chart Updated Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('all.chart.content')->with($notification);
+    } // end method
+
+    public function DeleteChart($id)
+    {
+
+        Chart::findOrFail($id)->delete();
+
+        $notification = array(
+            'message' => 'Chart Deleted Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+    } // end method
 }

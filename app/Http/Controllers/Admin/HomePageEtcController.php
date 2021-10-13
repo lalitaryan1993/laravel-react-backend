@@ -40,59 +40,98 @@ class HomePageEtcController extends Controller
     //     return $result;
     // }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function AllHomeContent()
     {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+        $homeContent = HomePageEtc::all();
+        return view('backend.homecontent.all_homeContent', compact('homeContent'));
+    } // end method
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function AddHomeContent()
     {
-        //
-    }
+        return view('backend.homecontent.add_homeContent');
+    } // end method
+    public function StoreHomeContent(Request $request)
+    {
+
+        $request->validate([
+            'home_title' => 'required',
+            'home_subtitle' => 'required',
+
+        ], [
+            'home_title.required' => 'Input Home Title Name',
+            'home_subtitle.required' => 'Input Home Sub Title',
+
+        ]);
+
+
+
+        HomePageEtc::insert([
+            'home_title' => $request->home_title,
+            'home_subtitle' => $request->home_subtitle,
+            'tech_description' => $request->tech_description,
+            'total_student' => $request->total_student,
+            'total_course' => $request->total_course,
+            'total_review' => $request->total_review,
+            'video_description' => $request->video_description,
+            'video_url' => $request->video_url,
+
+        ]);
+
+        $notification = array(
+            'message' => 'Home Content Inserted Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('all.home.content')->with($notification);
+    } // end method
+
+    public function EditHomeContent($id)
+    {
+
+        $homeContent = HomePageEtc::findOrFail($id);
+        return view('backend.homecontent.edit_homecontent', compact('homeContent'));
+    } // end method
+
+    public function UpdateHomeContent(Request $request)
+    {
+
+        $home_id = $request->id;
+
+        HomePageEtc::findOrFail($home_id)->update([
+            'home_title' => $request->home_title,
+            'home_subtitle' => $request->home_subtitle,
+            'tech_description' => $request->tech_description,
+            'total_student' => $request->total_student,
+            'total_course' => $request->total_course,
+            'total_review' => $request->total_review,
+            'video_description' => $request->video_description,
+            'video_url' => $request->video_url,
+
+        ]);
+
+        $notification = array(
+            'message' => 'Home Content Updated Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('all.home.content')->with($notification);
+    } // end method
+
+
+    public function DeleteHomeContent($id)
+    {
+
+        HomePageEtc::findOrFail($id)->delete();
+
+        $notification = array(
+            'message' => 'Home Content Deleted Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+    } // end method
+
 }

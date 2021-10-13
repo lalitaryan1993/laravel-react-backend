@@ -19,10 +19,17 @@ class InformationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function AllInformation()
     {
-        //
+        $information = Information::all();
+        return view('backend.information.all_information', compact('information'));
     }
+
+    public function AddInformation()
+    {
+        return view('backend.information.add_information');
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -30,53 +37,64 @@ class InformationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function StoreInformation(Request $request)
     {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+        Information::insert([
+            'about' => $request->about,
+            'refund' => $request->refund,
+            'terms' => $request->terms,
+            'privacy' => $request->privacy,
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+        ]);
+        $notification = array(
+            'message' => 'Information Inserted Successfully',
+            'alert-type' => 'success'
+        );
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+        return redirect()->route('all.information')->with($notification);
+    } // end method
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+
+
+    public function EditInformation($id)
     {
-        //
-    }
+
+        $information = Information::findOrFail($id);
+        return view('backend.information.edit_information', compact('information'));
+    } // end method
+
+
+    public function UpdateInformation(Request $request, $id)
+    {
+
+        Information::findOrFail($id)->update([
+            'about' => $request->about,
+            'refund' => $request->refund,
+            'terms' => $request->terms,
+            'privacy' => $request->privacy,
+
+        ]);
+        $notification = array(
+            'message' => 'Information Updated Successfully',
+            'alert-type' => 'info'
+        );
+
+        return redirect()->route('all.information')->with($notification);
+    } // end method
+
+
+
+    public function DeleteInformation($id)
+    {
+
+        Information::findOrFail($id)->delete();
+
+        $notification = array(
+            'message' => 'Information Deleted Successfully',
+            'alert-type' => 'info'
+        );
+
+        return redirect()->back()->with($notification);
+    } // end method
 }

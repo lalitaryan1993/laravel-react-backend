@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ClientReview;
 use Illuminate\Http\Request;
+use Image;
 
 class ClientReviewController extends Controller
 {
@@ -14,69 +15,112 @@ class ClientReviewController extends Controller
         return $clientReviews;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function AllReview()
     {
-        //
+        $review = ClientReview::all();
+        return view('backend.review.all_review', compact('review'));
+    } // end method
+
+
+    public function AddReview()
+    {
+        return view('backend.review.add_review');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function StoreReview(Request $request)
     {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+        $request->validate([
+            'client_title' => 'required',
+            'client_description' => 'required',
+            'client_img' => 'required',
+        ], [
+            'client_title.required' => 'Input Client Name',
+            'client_description.required' => 'Input Client Description',
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+        $image = $request->file('client_img');
+        $name_gen = hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
+        Image::make($image)->resize(626, 417)->save('upload/review/' . $name_gen);
+        $save_url = 'http://127.0.0.1:8000/upload/review/' . $name_gen;
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+        ClientReview::insert([
+            'client_title' => $request->client_title,
+            'client_description' => $request->client_description,
+            'client_img' => $save_url,
+        ]);
+
+        $notification = array(
+            'message' => 'Review Inserted Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('all.review')->with($notification);
+    } // end method
+
+    public function EditReview($id)
     {
-        //
-    }
+
+        $review = ClientReview::findOrFail($id);
+        return view('backend.review.edit_review', compact('review'));
+    } // end method
+
+
+    public function UpdateReview(Request $request)
+    {
+
+        $review_id = $request->id;
+
+        if ($request->file('client_img')) {
+
+            $image = $request->file('client_img');
+            $name_gen = hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
+            Image::make($image)->resize(626, 417)->save('upload/review/' . $name_gen);
+            $save_url = 'http://127.0.0.1:8000/upload/review/' . $name_gen;
+
+            ClientReview::findOrFail($review_id)->update([
+
+                'client_title' => $request->client_title,
+                'client_description' => $request->client_description,
+                'client_img' => $save_url,
+            ]);
+
+            $notification = array(
+                'message' => 'Review Updated Successfully',
+                'alert-type' => 'success'
+            );
+
+            return redirect()->route('all.review')->with($notification);
+        } else {
+
+            ClientReview::findOrFail($review_id)->update([
+
+                'client_title' => $request->client_title,
+                'client_description' => $request->client_description,
+
+            ]);
+
+            $notification = array(
+                'message' => 'Review Updated Without Image Successfully',
+                'alert-type' => 'success'
+            );
+
+            return redirect()->route('all.review')->with($notification);
+        }
+    } // end method
+
+
+    public function DeleteReview($id)
+    {
+
+        ClientReview::findOrFail($id)->delete();
+
+        $notification = array(
+            'message' => 'Review Deleted Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+    } // end method
 }

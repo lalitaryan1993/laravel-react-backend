@@ -41,26 +41,25 @@ class ContactController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function AllContactMessage()
     {
-        //
-    }
+        $contact = Contact::all();
+        return view('backend.contact.all_contact', compact('contact'));
+    } // end method
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function DeleteContactMessage($id)
     {
-        //
-    }
+
+        Contact::findOrFail($id)->delete();
+
+        $notification = array(
+            'message' => 'Contact Message Deleted Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+    } // end method
 
     /**
      * Display the specified resource.
